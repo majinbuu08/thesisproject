@@ -1,0 +1,7 @@
+path: C:\Users\jdich\thesis project
+train: C:\Users\jdich\thesis project\train
+val: C:\Users\jdich\thesis project\valid
+test: C:\Users\jdich\thesis project\test
+
+names:
+ 0: Person
