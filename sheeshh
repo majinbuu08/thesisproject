@@ -1,0 +1,44 @@
+import cv2
+import os
+import multiprocessing
+
+# Assuming you have a function to load an OpenCL-accelerated object detection model
+def load_opencl_model(model_path):
+    # Load the OpenCL-accelerated model
+    # Your code to load the OpenCL model goes here
+    pass
+
+if __name__ == '__main__':
+    multiprocessing.freeze_support()  # Windows only
+
+    # Load the OpenCL-accelerated model
+    opencl_model = load_opencl_model('path_to_opencl_model')
+
+    # Use a context manager to handle the video capture object
+    with cv2.VideoCapture(0) as cap:
+        while True:
+            # Read a frame from the video stream
+            ret, frame = cap.read()
+
+            # Perform inference using the OpenCL-accelerated model
+            detections = opencl_model.detect(frame)
+
+            # Draw bounding boxes on the frame
+            for detection in detections:
+                x_min, y_min, x_max, y_max = detection['bbox']
+                class_id = detection['class_id']
+                confidence = detection['confidence']
+
+                cv2.rectangle(frame, (int(x_min), int(y_min)), (int(x_max), int(y_max)), (0, 255, 0), 2)
+                cv2.putText(frame, f"Class: {class_id}, Confidence: {confidence:.2f}", (int(x_min), int(y_min) - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+            # Display the frame
+            cv2.imshow('OpenCL Object Detection', frame)
+
+            # Break the loop if 'q' key is pressed
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # No need to release the video capture object and close the OpenCV windows
+        # The context manager will do it automatically
